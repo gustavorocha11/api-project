@@ -59,7 +59,7 @@ O pensamento para a criação desta API, está em torno da realização das oper
 
 1.  A aplicação possui usuários com perfis `administradores e não administradores`.
 
-2.  Possui validações de campos existentes, presentes ou nulos nas rotas com `parametros na URL e na requisção`.
+2.  Possui validações de campos existentes, presentes ou nulos nas rotas com `parametros na URL e na requisição`.
 
 3.  É possível que qualquer tipo de perfil de usuário realize o `cadastro de outros usuários, produtos, cultivos, endereços ou fazendas`.
 
