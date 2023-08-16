@@ -1,9 +1,3 @@
-/**
- *
- * GET - Server Application
- * SET - JSON
- *
- */
 require("dotenv/config");
 import "reflect-metadata";
 import "express-async-errors";
@@ -13,13 +7,10 @@ import "./database";
 
 const app = express();
 
-/* Set Json */
 app.use(express.json());
 
-/* Setar Rotas */
 app.use(router);
 
-// Apresentar mensagens de retorno na tela
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
     if (err instanceof Error) {
@@ -44,7 +35,6 @@ app.get("/terms", (request, response) => {
   );
 });
 
-/* Set Server Application */
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`NodeJs Server Running on port: 3000`);
 });

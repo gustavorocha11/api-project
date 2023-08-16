@@ -1,61 +1,45 @@
-import { getCustomRepository } from "typeorm"
-import { RepositorioUsuario } from "../../repositories/RepositorioUsuario"
-import {hash} from "bcryptjs"
+import { getCustomRepository } from "typeorm";
+import { RepositorioUsuario } from "../../repositories/RepositorioUsuario";
+import { hash } from "bcryptjs";
 
-// INTERFACE COM OS DADOS DA TABELA USUÁRIO
 interface IUsuarioRequest {
-	nome: string,
-	email: string,
-	admin?: boolean,
-	senha: string,
+  nome: string;
+  email: string;
+  admin?: boolean;
+  senha: string;
 }
 
-// MÉTODO EXECUTE, RECEBE OS PARAMETROS {NAME. EMAIL, ADMIN VINDOS DA INTERFACE}
 class ServicoCriarUsuario {
+  async execute({ nome, email, admin = false, senha }: IUsuarioRequest) {
+    const repositorioUsuario = getCustomRepository(RepositorioUsuario);
 
-	async execute({nome, email, admin = false, senha}
-		: IUsuarioRequest){
-		// Inicializa o repositório
-		const repositorioUsuario = getCustomRepository(RepositorioUsuario)
+    if (!email || !nome || !senha) {
+      throw new Error("Campos obrigatórios não preenchidos");
+    }
 
-		// try {
-			// VALIDA SE EXISTE EMAIL
-		if(!email || !nome || !senha){
-			throw new Error("Campos obrigatórios não preenchidos")
-		}
+    const verificarEmailUsuario = await repositorioUsuario.findOne({
+      email,
+    });
 
-		// BUSCA PELO EMAIL
-		const verificarEmailUsuario = await repositorioUsuario.findOne({
-			email
-		})
+    if (verificarEmailUsuario) {
+      throw new Error("Usário Já Existe");
+    }
 
-		// VALIDA SE EXISTE O EMAIL JÁ EXISTE
-		if(verificarEmailUsuario) {
-			 throw new Error("Usário Já Existe")
-		}
+    const passwordHash = await hash(senha, 8);
 
-		// CRIPTOGRAFAR SENHA
-		const passwordHash = await hash(senha, 8)
+    const user = repositorioUsuario.create({
+      nome,
+      email,
+      admin,
+      senha: passwordHash,
+    });
 
-		// CRIA O USUÁRIO
-		const user = repositorioUsuario.create({
-			nome,
-			email,
-			admin,
-			senha: passwordHash
-		})
+    await repositorioUsuario.save(user);
 
-		// SALVA O USUÁRIO NO BANCO DE DADOS	
-		await repositorioUsuario.save(user)
+    console.log(user);
 
-		console.log(user)
-
-		return user
-		// } catch (error) {
-        // return error
-		// }
-		
-	}
+    return user;
+  }
 }
 
-export {ServicoCriarUsuario}
+export { ServicoCriarUsuario };

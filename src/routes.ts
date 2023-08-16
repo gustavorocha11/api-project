@@ -5,6 +5,7 @@ import { Router } from "express";
 import { ControladorCriarUsuario } from "./controllers/Usuario/ControladorCriarUsuario";
 import { ControladorAutenticarUsuario } from "./controllers/Usuario/ControladorAutenticarUsuario";
 import { ControladorListarUsuario } from "./controllers/Usuario/ControladorListarUsuario";
+import { ControladorDeletarUsuario } from "./controllers/Usuario/ControladorDeletarUsuario";
 
 import { ControladorCriarProdutor } from "./controllers/Produtor/ControladorCriarProdutor";
 import { ControladorListarProdutor } from "./controllers/Produtor/ControladorListarProdutor";
@@ -36,6 +37,7 @@ const router = Router();
 const createUserController = new ControladorCriarUsuario();
 const controladorAutenticarUsuario = new ControladorAutenticarUsuario();
 const controladorListarUsuario = new ControladorListarUsuario();
+const controladorDeletarUsuario = new ControladorDeletarUsuario();
 
 /* Controlador - PRODUTOR */
 const controladorCriarProdutor = new ControladorCriarProdutor();
@@ -74,6 +76,7 @@ const controladorListarVegeTotalHectarFazenda =
 router.post("/usuario", usuarioAdmin, createUserController.handle);
 router.post("/login", controladorAutenticarUsuario.handle);
 router.get("/usuario", controladorListarUsuario.handle);
+router.delete("/usuario/:id", controladorDeletarUsuario.handle);
 
 /* Rotas = PRODUTOR */
 router.post("/produtor", autenticacao, controladorCriarProdutor.handle);
